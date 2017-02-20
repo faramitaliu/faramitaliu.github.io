@@ -175,6 +175,155 @@ var _hmt = _hmt || [];
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-shift_left_right" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/02/20/shift_left_right/">关于C语言左移和右移的一点问题</a>
+    </h1>
+  
+
+        
+        <a href="/2017/02/20/shift_left_right/" class="archive-article-date">
+  	<time datetime="2017-02-20T07:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在读<em>《C语言深度解剖》</em>一书的时候看到个关于左右移位运算的有趣的问题，虽然不是经常碰到，但是有必要测试一下。问题如下：</p>
+<blockquote>
+<ul>
+<li>0x01 &lt;&lt; 2+3</li>
+<li>0x01 &lt;&lt; 2+30</li>
+<li>0x01 &lt;&lt; 2-3</li>
+</ul>
+</blockquote>
+<p>以上三个表达式运算的结果分别是多少？</p>
+<p>拓展思考：</p>
+<blockquote>
+<ul>
+<li>左移运算的被操作数为负数或者移动负数个位应该怎么计算？</li>
+<li>右移运算的被操作数为负数呢？</li>
+</ul>
+</blockquote>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>分析前先做一下 <strong><em>测试环境</em></strong> 介绍：</p>
+<blockquote>
+<ul>
+<li>操作系统：Windows 7 x64</li>
+<li>编译器：gcc version 4.8.2 (i686-posix-dwarf-rev3, Built by MinGW-W64 project)</li>
+</ul>
+<hr>
+<ul>
+<li>操作系统：Mac OSX 10.11.6</li>
+<li>编译器：Apple LLVM version 7.0.0 (clang-700.1.76) Target: x86_64-apple-darwin15.6.0 Thread model: posix</li>
+</ul>
+</blockquote>
+<p><strong>1. 先看第一个表达式 0x01 &lt;&lt; 2+3</strong></p>
+<p>这个其实只是运算符的优先级问题，+ 的优先级比 &lt;&lt; 运算的优先级大，所以 <em>0x01 &lt;&lt; 2+3</em> 等效于 <em>0x01 &lt;&lt; (2+3)</em> 即结果为32。</p>
+<p><strong>2. 第二个表达式 0x01 &lt;&lt; 2+30</strong></p>
+<p>这个表达式等效于 <em>0x01 &lt;&lt; 32</em> ，测试代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line"><span class="keyword">int</span> k = <span class="number">0x40000000</span>; <span class="comment">//16进制的40000000,为2进制的 01000000...0000</span></div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x40000000&lt;&lt;1=%d\n"</span>,k&lt;&lt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x40000000&lt;&lt;2=%d\n"</span>,k&lt;&lt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x40000000&lt;&lt;3=%d\n"</span>,k&lt;&lt;<span class="number">3</span>);</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;31=%d\n"</span>,i&lt;&lt;<span class="number">31</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;32=%d\n"</span>,i&lt;&lt;<span class="number">32</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;33=%d\n"</span>,i&lt;&lt;<span class="number">33</span>);</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x80000000&lt;&lt;1=%d\n"</span>,<span class="number">0x80000000</span>&lt;&lt;<span class="number">1</span>); <span class="comment">//0x80000000 = -2147483648</span></div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;1=%d\n"</span>,j&lt;&lt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;2=%d\n"</span>,j&lt;&lt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;31=%d\n"</span>,j&lt;&lt;<span class="number">31</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;32=%d\n"</span>,j&lt;&lt;<span class="number">32</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;33=%d\n"</span>,j&lt;&lt;<span class="number">33</span>);</div></pre></td></tr></table></figure>
+<p>结果为：</p>
+<blockquote>
+<p>0x40000000&lt;&lt;1=-2147483648<br>0x40000000&lt;&lt;2=0<br>0x40000000&lt;&lt;3=0</p>
+<p>1&lt;&lt;31=-2147483648<br>1&lt;&lt;32=1<br>1&lt;&lt;33=2</p>
+<p>0x80000000&lt;&lt;1=0  <em>即-2147483648&lt;&lt;1=0</em><br>-1&lt;&lt;1=-2<br>-1&lt;&lt;2=-4<br>-1&lt;&lt;31=-2147483648<br>-1&lt;&lt;32=-1<br>-1&lt;&lt;33=-2</p>
+</blockquote>
+<p>分析：</p>
+<blockquote>
+<p>-1的原码为 1000 0000 0000 0001<br>-1的反码为 1111 1111 1111 1110<br>-1的补码为 1111 1111 1111 1111<br>左移1位后的补码 1111 1111 1111 1110<br>左移1位后的原码 1000 0000 0000 0010</p>
+</blockquote>
+<p>由此可见</p>
+<blockquote>
+<ul>
+<li>在左移运算中，如果被操作数为有符号数，其最高位可以被覆盖</li>
+<li>若果移动位数超过数据类型最大位数时，编译器会按移动位数对改数据类型的位数取模的结果进行移位（<strong>适用于左移和右移</strong>）。即：1&lt;&lt;32 等效于 1&lt;&lt;(32%32) = 1&lt;&lt;0</li>
+</ul>
+</blockquote>
+<p><strong>3. 对于被操作数为负数的</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> j = <span class="number">-1</span>;</div><div class="line">    </div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&gt;&gt;1=%d\n"</span>,j&gt;&gt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&gt;&gt;2=%d\n"</span>,j&gt;&gt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&gt;&gt;3=%d\n"</span>,j&gt;&gt;<span class="number">3</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-2&gt;&gt;1=%d\n"</span>,<span class="number">-2</span>&gt;&gt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-4&gt;&gt;1=%d\n"</span>,<span class="number">-4</span>&gt;&gt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-2&gt;&gt;2=%d\n"</span>,<span class="number">-2</span>&gt;&gt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-2&gt;&gt;3=%d\n"</span>,<span class="number">-2</span>&gt;&gt;<span class="number">3</span>);</div></pre></td></tr></table></figure>
+<p>计算结果：</p>
+<blockquote>
+<p>-1&gt;&gt;1=-1<br>-1&gt;&gt;2=-1<br>-1&gt;&gt;3=-1<br>-2&gt;&gt;1=-1<br>-4&gt;&gt;1=-2<br>-2&gt;&gt;2=-1<br>-2&gt;&gt;3=-1</p>
+</blockquote>
+<p><em>补充知识点</em></p>
+<blockquote>
+<p><strong>逻辑左移=算数左移，右边统一添 0<br>逻辑右移，左边统一添 0<br>算数右移，左边添加的数和符号有关</strong></p>
+<p><em>C语言的标准指出，无符号数执行的所有移位操作都是逻辑的，而对于有符号数，采用哪种方式取决于编译器。算术左移和逻辑左移是相同的，而算术右移和逻辑右移，取决于符号位。（嵌入式移植时需要注意）</em></p>
+</blockquote>
+<p>分析：</p>
+<blockquote>
+<p>-4的原码为 1000 0000 0000 0100<br>-4的反码为 1111 1111 1111 1011<br>-4的补码为 1111 1111 1111 1100<br>-4左移1位后的补码 1111 1111 1111 1110<br>-4左移1位后的原码 1000 0000 0000 0010<br>所以在 gcc 和 clang 中应该采用的是<strong>算数右移</strong></p>
+</blockquote>
+<p><strong>4. 对于第三个表达式 0x01 &lt;&lt; 2-3</strong></p>
+<p>测试代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;31=%d\n"</span>,i&lt;&lt;<span class="number">31</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;-1=%d\n"</span>,i&lt;&lt;<span class="number">-1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;-2=%d\n"</span>,i&lt;&lt;<span class="number">-2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;-3=%d\n"</span>,i&lt;&lt;<span class="number">-3</span>);</div></pre></td></tr></table></figure>
+<p>计算结果：</p>
+<blockquote>
+<p>1&lt;&lt;31=-2147483648<br>1&lt;&lt;-1=-2147483648<br>1&lt;&lt;-2=1073741824<br>1&lt;&lt;-3=536870912</p>
+</blockquote>
+<p>分析：</p>
+<blockquote>
+<ul>
+<li>对于移动位数是负数 x ，其移动位数按 x 的补码对32取余数的结果移位。</li>
+</ul>
+</blockquote>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>对于左移和右移总结如下：</p>
+<blockquote>
+<ul>
+<li><strong>1. 移动位数不能超过操作数据类型的最大位数，否则对最大位数求余后移动；</strong></li>
+<li><strong>2. 如果移动位数为负数，则移动位数为负数补码对操作数据类型位数求余结果移位；</strong></li>
+<li><strong>3. 对于左移，左移后的位补零，最高位符号位可以被覆盖；</strong></li>
+<li><strong>4. 对于右移，正常右移分逻辑右移和算术右移，由编译器决定；</strong></li>
+<li><strong>5. 对于右移，如果被操作数为负数，则将其转换成补码，然后正常右移得到原码结果。</strong></li>
+</ul>
+</blockquote>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/02/20/shift_left_right/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+  
     <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -317,6 +466,10 @@ var _hmt = _hmt || [];
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
