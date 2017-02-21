@@ -8,7 +8,7 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>关于C语言左移和右移的一点问题 | faramitaliu博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题，虽然不是经常碰到，但是有必要测试一下。问题如下：
+  <meta name="description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题。问题如下：
 
 
 0x01 &amp;lt;&amp;lt; 2+3
@@ -21,15 +21,12 @@
 
 
 左移运算的被操作数为负数或者移动负数个位应该怎么计算？
-右移运算的被操作数为负数呢？
-
-
-分析分析前先做一">
+右移运算的被操作数为负数呢？">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于C语言左移和右移的一点问题">
 <meta property="og:url" content="http://yoursite.com/2017/02/20/shift_left_right/index.html">
 <meta property="og:site_name" content="faramitaliu博客">
-<meta property="og:description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题，虽然不是经常碰到，但是有必要测试一下。问题如下：
+<meta property="og:description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题。问题如下：
 
 
 0x01 &amp;lt;&amp;lt; 2+3
@@ -42,14 +39,11 @@
 
 
 左移运算的被操作数为负数或者移动负数个位应该怎么计算？
-右移运算的被操作数为负数呢？
-
-
-分析分析前先做一">
-<meta property="og:updated_time" content="2017-02-20T14:04:45.000Z">
+右移运算的被操作数为负数呢？">
+<meta property="og:updated_time" content="2017-02-21T09:37:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于C语言左移和右移的一点问题">
-<meta name="twitter:description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题，虽然不是经常碰到，但是有必要测试一下。问题如下：
+<meta name="twitter:description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题。问题如下：
 
 
 0x01 &amp;lt;&amp;lt; 2+3
@@ -62,10 +56,7 @@
 
 
 左移运算的被操作数为负数或者移动负数个位应该怎么计算？
-右移运算的被操作数为负数呢？
-
-
-分析分析前先做一">
+右移运算的被操作数为负数呢？">
   
     <link rel="alternative" href="/atom.xml" title="faramitaliu博客" type="application/atom+xml">
   
@@ -242,7 +233,7 @@ var _hmt = _hmt || [];
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在读<em>《C语言深度解剖》</em>一书的时候看到个关于左右移位运算的有趣的问题，虽然不是经常碰到，但是有必要测试一下。问题如下：</p>
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在读<em>《C语言深度解剖》</em>一书的时候看到个关于左右移位运算的有趣的问题。问题如下：</p>
 <blockquote>
 <ul>
 <li>0x01 &lt;&lt; 2+3</li>
@@ -258,6 +249,7 @@ var _hmt = _hmt || [];
 <li>右移运算的被操作数为负数呢？</li>
 </ul>
 </blockquote>
+<a id="more"></a>
 <h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>分析前先做一下 <strong><em>测试环境</em></strong> 介绍：</p>
 <blockquote>
 <ul>
