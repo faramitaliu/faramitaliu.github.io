@@ -6,17 +6,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>faramitaliu博客</title>
+  <title>修复sqlite3数据库 | faramitaliu博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="铜陵学院11级。擅长嵌入式、Linux。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="faramitaliu博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="最近碰到几次SQLite3数据库损坏的情况。现象是使用SQLite3可视化工具打开时出现密码输入框，可是SQLite3数据库在开发的时候根本没有添加加密模块，猜测可能是数据库被损坏了。因数据库里都是现场数据，需要取出分析，只能Google资料尝试恢复。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="修复sqlite3数据库">
+<meta property="og:url" content="http://yoursite.com/2017/02/28/repair_sqlite3_db/index.html">
 <meta property="og:site_name" content="faramitaliu博客">
-<meta property="og:description" content="铜陵学院11级。擅长嵌入式、Linux。">
+<meta property="og:description" content="最近碰到几次SQLite3数据库损坏的情况。现象是使用SQLite3可视化工具打开时出现密码输入框，可是SQLite3数据库在开发的时候根本没有添加加密模块，猜测可能是数据库被损坏了。因数据库里都是现场数据，需要取出分析，只能Google资料尝试恢复。">
+<meta property="og:image" content="http://yoursite.com/assets/img4blog/repair_sqlite3_db/SQLite3_viewer.png">
+<meta property="og:image" content="http://yoursite.com/assets/img4blog/repair_sqlite3_db/pragma_check.png">
+<meta property="og:updated_time" content="2017-02-28T10:38:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="faramitaliu博客">
-<meta name="twitter:description" content="铜陵学院11级。擅长嵌入式、Linux。">
+<meta name="twitter:title" content="修复sqlite3数据库">
+<meta name="twitter:description" content="最近碰到几次SQLite3数据库损坏的情况。现象是使用SQLite3可视化工具打开时出现密码输入框，可是SQLite3数据库在开发的时候根本没有添加加密模块，猜测可能是数据库被损坏了。因数据库里都是现场数据，需要取出分析，只能Google资料尝试恢复。">
+<meta name="twitter:image" content="http://yoursite.com/assets/img4blog/repair_sqlite3_db/SQLite3_viewer.png">
   
     <link rel="alternative" href="/atom.xml" title="faramitaliu博客" type="application/atom+xml">
   
@@ -177,16 +181,14 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-repair_sqlite3_db" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-repair_sqlite3_db" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/28/repair_sqlite3_db/">修复sqlite3数据库</a>
+    <h1 class="article-title" itemprop="name">
+      修复sqlite3数据库
     </h1>
   
 
@@ -201,11 +203,68 @@ var _hmt = _hmt || [];
       
         <p><em>最近碰到几次SQLite3数据库损坏的情况。现象是使用SQLite3可视化工具打开时出现密码输入框，可是SQLite3数据库在开发的时候根本没有添加加密模块，猜测可能是数据库被损坏了。因数据库里都是现场数据，需要取出分析，只能Google资料尝试恢复。</em></p>
 <center><br><img src="/assets/img4blog/repair_sqlite3_db/SQLite3_viewer.png" alt="SQLite3可视化工具"><br></center>
-        
-          <a class="article-more-a" href="/2017/02/28/repair_sqlite3_db/#more">more >></a>
-        
+
+<a id="more"></a>
+<h2 id="确定问题"><a href="#确定问题" class="headerlink" title="确定问题"></a>确定问题</h2><p>将数据库放入程序中，执行SQL操作的时候发现数据库有报错。</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">malformed</span> <span class="selector-tag">database</span> <span class="selector-tag">schema</span> (<span class="number">0</span>)(<span class="attribute">ErrCode</span>:<span class="number">11</span>)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>对于ErrCode:11。在<a href="http://www.sqlite.org/rescode.html#corrupt" target="_blank" rel="external">官网</a>可以查询到起具体含义，以及产生这种错误的可能原因：</p>
+<p><strong>(11) SQLITE_CORRUPT</strong></p>
+<p>The SQLITE_CORRUPT result code indicates that the database file has been corrupted. See the </p>
+<p><a href="http://www.sqlite.org/lockingv3.html#how_to_corrupt" target="_blank" rel="external">How To Corrupt Your Database Files</a> for further discussion on how corruption can occur.</p>
+</blockquote>
+<p>结合我们的实际情况猜测，机器应该是在数据库正在写入的时候突然断电或主程序被Kill导致数据写入不完整而被损坏了。</p>
+<p>在命令行工具下，执行<strong><em>PRAGMA  integrity_check</em></strong> 命令可以检测数据库完整性。</p>
+<center><br><img src="/assets/img4blog/repair_sqlite3_db/pragma_check.png" alt="Intergrity Check"><br></center>
+
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>在官方提供的命令行工具下，将数据库导出为sql文件，然后新建数据库导入即可。</p>
+<blockquote>
+<p>导出sql文件</p>
+<p>$sqlite3 Test.db</p>
+<p>$sqlite&gt;.output tmp.sql</p>
+<p>$sqlite&gt;.dump</p>
+<p>$sqlite&gt;.quit</p>
+<p>再导入到一个数据库中</p>
+<p>$sqlite3 New.db</p>
+<p>$sqlite&gt;.read tmp.sql</p>
+<p>$sqlite&gt;.quit</p>
+</blockquote>
+<p>自此，数据库已恢复完成，可以用可视化工具打开了！</p>
+<p><a href="faramitaliu.github.io">博客地址</a> : <a href="liuzhiqiang.tech">liuzhiqiang.tech</a></p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/img/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/img/weixin.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -229,18 +288,74 @@ var _hmt = _hmt || [];
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/02/28/repair_sqlite3_db/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/02/28/repair_sqlite3_db/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
 
-
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2017/02/20/shift_left_right/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于C语言左移和右移的一点问题</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
 
 
 
@@ -248,86 +363,28 @@ var _hmt = _hmt || [];
 
 
   
-    <article id="post-shift_left_right" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/02/20/shift_left_right/">关于C语言左移和右移的一点问题</a>
-    </h1>
-  
-
-        
-        <a href="/2017/02/20/shift_left_right/" class="archive-article-date">
-  	<time datetime="2017-02-20T07:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在读<em>《C语言深度解剖》</em>一书的时候看到个关于左右移位运算的有趣的问题。问题如下：</p>
-<blockquote>
-<ul>
-<li>0x01 &lt;&lt; 2+3</li>
-<li>0x01 &lt;&lt; 2+30</li>
-<li>0x01 &lt;&lt; 2-3</li>
-</ul>
-</blockquote>
-<p>以上三个表达式运算的结果分别是多少？</p>
-<p>拓展思考：</p>
-<blockquote>
-<ul>
-<li>左移运算的被操作数为负数或者移动负数个位应该怎么计算？</li>
-<li>右移运算的被操作数为负数呢？</li>
-</ul>
-</blockquote>
-        
-          <a class="article-more-a" href="/2017/02/20/shift_left_right/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/02/20/shift_left_right/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-
-
-
-
-
-
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="repair_sqlite3_db" data-title="修复sqlite3数据库" data-url="http://yoursite.com/2017/02/28/repair_sqlite3_db/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"faramitaliu"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
   
-  
+
+
 
 
           </div>
@@ -349,8 +406,8 @@ var _hmt = _hmt || [];
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
