@@ -16,7 +16,8 @@
 <meta property="og:description" content="最近碰到几次SQLite3数据库损坏的情况。现象是使用SQLite3可视化工具打开时出现密码输入框，可是SQLite3数据库在开发的时候根本没有添加加密模块，猜测可能是数据库被损坏了。因数据库里都是现场数据，需要取出分析，只能Google资料尝试恢复。">
 <meta property="og:image" content="http://yoursite.com/assets/img4blog/repair_sqlite3_db/SQLite3_viewer.png">
 <meta property="og:image" content="http://yoursite.com/assets/img4blog/repair_sqlite3_db/pragma_check.png">
-<meta property="og:updated_time" content="2017-02-28T10:54:45.000Z">
+<meta property="og:image" content="http://yoursite.com/assets/img4blog/repair_sqlite3_db/sqlite3.png">
+<meta property="og:updated_time" content="2017-02-28T11:05:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="修复sqlite3数据库">
 <meta name="twitter:description" content="最近碰到几次SQLite3数据库损坏的情况。现象是使用SQLite3可视化工具打开时出现密码输入框，可是SQLite3数据库在开发的时候根本没有添加加密模块，猜测可能是数据库被损坏了。因数据库里都是现场数据，需要取出分析，只能Google资料尝试恢复。">
@@ -218,6 +219,9 @@ var _hmt = _hmt || [];
 <center><br><img src="/assets/img4blog/repair_sqlite3_db/pragma_check.png" alt="Intergrity Check"><br></center>
 
 <h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>在官方提供的命令行工具下，将数据库导出为sql文件，然后新建数据库导入即可。</p>
+<center><br><img src="/assets/img4blog/repair_sqlite3_db/sqlite3.png" alt="SQLite3可视化工具"><br></center>
+
+
 <blockquote>
 <p>导出sql文件</p>
 <p>$sqlite3 Test.db</p>
