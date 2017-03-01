@@ -6,57 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>关于C语言左移和右移的一点问题 | faramitaliu博客</title>
+  <title>SQL必知必会(上) | faramitaliu博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题。问题如下：
+  <meta name="description" content="最近这段时间做了一个公司的项目，用到 SQLite3 数据库来存储数据，虽然数据并发要求不高，但存储数据量活动量有几十万（动态增删）。而且要保证机器全年正常运行。项目的有些部分数据操作实现是在应用程序部分实现，但是用 SQL 来内部实现的话效率会更高同时代码也更简洁。所以趁最近空闲一些来读下《SQL 必知必会》来补充一下欠缺。
 
-
-0x01 &amp;lt;&amp;lt; 2+3
-0x01 &amp;lt;&amp;lt; 2+30
-0x01 &amp;lt;&amp;lt; 2-3
-
-
-以上三个表达式运算的结果分别是多少？
-拓展思考：
-
-
-左移运算的被操作数为负数或者移动负数个位应该怎么计算？
-右移运算的被操作数为负数呢？">
+SQL（发音为字母S-Q-L或sequel）是结构化查询语言（St">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于C语言左移和右移的一点问题">
-<meta property="og:url" content="http://yoursite.com/2017/02/20/shift_left_right/index.html">
+<meta property="og:title" content="SQL必知必会(上)">
+<meta property="og:url" content="http://yoursite.com/2017/03/01/sql_must_know_will_be/index.html">
 <meta property="og:site_name" content="faramitaliu博客">
-<meta property="og:description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题。问题如下：
+<meta property="og:description" content="最近这段时间做了一个公司的项目，用到 SQLite3 数据库来存储数据，虽然数据并发要求不高，但存储数据量活动量有几十万（动态增删）。而且要保证机器全年正常运行。项目的有些部分数据操作实现是在应用程序部分实现，但是用 SQL 来内部实现的话效率会更高同时代码也更简洁。所以趁最近空闲一些来读下《SQL 必知必会》来补充一下欠缺。
 
-
-0x01 &amp;lt;&amp;lt; 2+3
-0x01 &amp;lt;&amp;lt; 2+30
-0x01 &amp;lt;&amp;lt; 2-3
-
-
-以上三个表达式运算的结果分别是多少？
-拓展思考：
-
-
-左移运算的被操作数为负数或者移动负数个位应该怎么计算？
-右移运算的被操作数为负数呢？">
-<meta property="og:updated_time" content="2017-02-21T09:37:57.000Z">
+SQL（发音为字母S-Q-L或sequel）是结构化查询语言（St">
+<meta property="og:updated_time" content="2017-03-01T12:23:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于C语言左移和右移的一点问题">
-<meta name="twitter:description" content="问题在读《C语言深度解剖》一书的时候看到个关于左右移位运算的有趣的问题。问题如下：
+<meta name="twitter:title" content="SQL必知必会(上)">
+<meta name="twitter:description" content="最近这段时间做了一个公司的项目，用到 SQLite3 数据库来存储数据，虽然数据并发要求不高，但存储数据量活动量有几十万（动态增删）。而且要保证机器全年正常运行。项目的有些部分数据操作实现是在应用程序部分实现，但是用 SQL 来内部实现的话效率会更高同时代码也更简洁。所以趁最近空闲一些来读下《SQL 必知必会》来补充一下欠缺。
 
-
-0x01 &amp;lt;&amp;lt; 2+3
-0x01 &amp;lt;&amp;lt; 2+30
-0x01 &amp;lt;&amp;lt; 2-3
-
-
-以上三个表达式运算的结果分别是多少？
-拓展思考：
-
-
-左移运算的被操作数为负数或者移动负数个位应该怎么计算？
-右移运算的被操作数为负数呢？">
+SQL（发音为字母S-Q-L或sequel）是结构化查询语言（St">
   
     <link rel="alternative" href="/atom.xml" title="faramitaliu博客" type="application/atom+xml">
   
@@ -217,108 +184,367 @@ var _hmt = _hmt || [];
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-shift_left_right" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-sql_must_know_will_be" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      关于C语言左移和右移的一点问题
+      SQL必知必会(上)
     </h1>
   
 
         
-        <a href="/2017/02/20/shift_left_right/" class="archive-article-date">
-  	<time datetime="2017-02-20T07:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-02-20</time>
+        <a href="/2017/03/01/sql_must_know_will_be/" class="archive-article-date">
+  	<time datetime="2017-03-01T12:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>在读<em>《C语言深度解剖》</em>一书的时候看到个关于左右移位运算的有趣的问题。问题如下：</p>
-<blockquote>
-<ul>
-<li>0x01 &lt;&lt; 2+3</li>
-<li>0x01 &lt;&lt; 2+30</li>
-<li>0x01 &lt;&lt; 2-3</li>
-</ul>
+        <blockquote>
+<p>最近这段时间做了一个公司的项目，用到 SQLite3 数据库来存储数据，虽然数据并发要求不高，但存储数据量活动量有几十万（动态增删）。而且要保证机器全年正常运行。项目的有些部分数据操作实现是在应用程序部分实现，但是用 SQL 来内部实现的话效率会更高同时代码也更简洁。所以趁最近空闲一些来读下《SQL 必知必会》来补充一下欠缺。</p>
 </blockquote>
-<p>以上三个表达式运算的结果分别是多少？</p>
-<p>拓展思考：</p>
-<blockquote>
-<ul>
-<li>左移运算的被操作数为负数或者移动负数个位应该怎么计算？</li>
-<li>右移运算的被操作数为负数呢？</li>
-</ul>
-</blockquote>
+<p><em>SQL（发音为字母S-Q-L或sequel）是结构化查询语言（Structured Query Language）的缩写</em></p>
+<h1 id="主键（primary-key）"><a href="#主键（primary-key）" class="headerlink" title="主键（primary key）"></a>主键（primary key）</h1><p><strong>主键的作用</strong>：便于数据库的操作和管理，没有主键，更新或删除特定行就会比较困难。</p>
 <a id="more"></a>
-<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>分析前先做一下 <strong><em>测试环境</em></strong> 介绍：</p>
+<p>表中的任何列都可以作为主键，只要它满足以下条件：</p>
+<ul>
+<li>任意两行都不具有相同的主键值；</li>
+<li>每一行都必须具有一个主键值（主键列不允许NULL值）；</li>
+<li>主键列中的值不允许修改或更新；</li>
+<li>主键值不能重用（如果某行从表中删除，它的主键不能赋给以后的新行）。</li>
+</ul>
+<blockquote>
+<p>当多个列作为主键时，上述条件必须应用到所有列，所有列值的组合必须是唯一的（但单个列的值可以不唯一）。</p>
+</blockquote>
+<h1 id="SELECT语句"><a href="#SELECT语句" class="headerlink" title="SELECT语句"></a>SELECT语句</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [<span class="keyword">DISTINCT</span>] [column1,column2,...] [*]  <span class="keyword">FROM</span> <span class="keyword">table</span> </div><div class="line"><span class="keyword">WHERE</span> [关系逻辑条件] [通配符搜索 <span class="keyword">LIKE</span>] [限制 <span class="keyword">LIMIT</span>] [子查询] [排序 <span class="keyword">ORDER</span> <span class="keyword">BY</span>] ...</div></pre></td></tr></table></figure>
+<ul>
+<li><p>不是必须的情况下，尽量少使用通配符；检索不需要的列通常会降低检索和程序性能。</p>
+</li>
+<li><p>DISTINCT去除字段值相同的列<strong>SELECT DISTINCT column FROM …</strong></p>
+</li>
+<li><p>指定从哪儿开始以及检索的行数：<strong>LIMIT num OFFSET offset_row</strong> 从 offset_row行开始检索num行（第一个被检索的行是第0行）。简化版写法：<strong>LIMIT  offset_row,num</strong> （不同数据库写法有区别，此写法可用于SQLite3）</p>
+</li>
+<li><p>在指定一条<strong>ORDER BY</strong>子句时，应该保证它是SELECT语句中<strong>最后一条子句</strong>。如果它不是最后的子句，将会出现错误消息。DESC降序，DESC关键字只应用到直接位于其前面的列名，如果想在多个列上进行降序排序，必须对每一列指定DESC关键字。升序排列（默认）ASC。</p>
+</li>
+<li><p>组合WHERE子句：</p>
+<ul>
+<li>逻辑操作符AND，OR（其中AND的优先级大于OR）；</li>
+<li>IN操作符用来指定条件范围，范围中的每个条件都可以进行匹配（类似于OR）。IN取一组由逗号分隔、括在圆括号中的合法值；</li>
+<li>NOT操作符（组合其他操作符使用，否定条件）。</li>
+</ul>
+</li>
+<li><p>通配符（wildcard）：通配符搜索只能用于文本字段（串），非文本数据类型字段不能使用通配符搜索。</p>
+<ul>
+<li>%表示任何字符出现任意次数（0个、1个或多个，不匹配NULL）；</li>
+<li>下划线（_），匹配单个字符。</li>
+<li>方括号（[]）通配符用来指定一个字符集，它必须匹配指定位置（通配符的位置）的一个字符。<em>只有微软的Access和SQL Server支持集合。</em></li>
+<li>说明：通配符搜索耗时，应减少使用。同时应尽量不要把它们用在搜索模式的开始处。</li>
+</ul>
+</li>
+<li><p>注释：</p>
+<ul>
+<li>使用– （两个连字符）嵌在行内，– 之后的文本就是注释；</li>
+<li>多行注释： /* 注释内容 */ ；</li>
+<li>单行注释： #注释内容（<em>SQLite3不支持这种注释方式</em>）。</li>
+</ul>
+</li>
+<li><p><em>WHERE子句操作符</em>（不是所有DBMS都适用）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说 明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>=</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt; &gt;</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>!</td>
+<td>不小于</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>!&gt;</td>
+<td>不大于</td>
+</tr>
+<tr>
+<td>BETWEEN … AND …</td>
+<td>在指定的两个值之间</td>
+</tr>
+<tr>
+<td>IS NULL</td>
+<td>为NULL值</td>
+</tr>
+</tbody>
+</table>
+<h1 id="计算字段"><a href="#计算字段" class="headerlink" title="计算字段"></a>计算字段</h1><p><strong>拼接字段</strong>：将值联结到一起（将一个值附加到另一个值）构成单个值。Access和SQL Server使用+号。DB2、Oracle、PostgreSQL、SQLite和Open Office Base使用 || 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> vend_name + <span class="string">' ('</span> + vend_country + <span class="string">')'</span> <span class="keyword">FROM</span> Vendors <span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</div></pre></td></tr></table></figure>
+<p><em>若某个字段有空白字符，可以使用函数去除：前导空白 (LTrim)、尾随空白 (RTrim) 或前导和尾随空白 (Trim)。</em></p>
+<p>对于拼接字段后新列的名字，可以使用别名（alias），用AS关键字赋予。别名还有其他用途。常见的用途包括在实际的表列名包含不合法的字符（如空格）时重新命名它，在原来的名字含混或容易误解时扩充它。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(vend_name) + <span class="string">'('</span> + <span class="keyword">RTRIM</span>(vend_country) + <span class="string">')'</span> <span class="keyword">AS</span> vend_title <span class="keyword">FROM</span> Vendors <span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</div></pre></td></tr></table></figure>
+<p><strong>算术计算</strong></p>
+<p>直接计算使用方式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">No</span>,<span class="keyword">id</span>*<span class="keyword">No</span> <span class="keyword">AS</span> new_name <span class="keyword">FROM</span> tablename <span class="keyword">WHERE</span> ...</div></pre></td></tr></table></figure>
+<p><strong>SQL算术操作符</strong></p>
+<table>
+<thead>
+<tr>
+<th>操 作 符</th>
+<th>说　　明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+</td>
+<td>加</td>
+</tr>
+<tr>
+<td>-</td>
+<td>减</td>
+</tr>
+<tr>
+<td>*</td>
+<td>乘</td>
+</tr>
+<tr>
+<td>/</td>
+<td>除</td>
+</tr>
+</tbody>
+</table>
+<p>数值处理函数，字符串处理函数，时间日期处理函数 …</p>
+<p><strong>SQL聚集函数</strong>：（aggregate function） 对某些行运行的函数，计算并返回一个值。</p>
+<table>
+<thead>
+<tr>
+<th>函　　数</th>
+<th>说　　明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVG()</td>
+<td>返回某列的平均值</td>
+</tr>
+<tr>
+<td>COUNT()</td>
+<td>返回某列的行数</td>
+</tr>
+<tr>
+<td>MAX()</td>
+<td>返回某列的最大值</td>
+</tr>
+<tr>
+<td>MIN()</td>
+<td>返回某列的最小值</td>
+</tr>
+<tr>
+<td>SUM()</td>
+<td>返回某列值之和</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
 <ul>
-<li>操作系统：Windows 7 x64</li>
-<li>编译器：gcc version 4.8.2 (i686-posix-dwarf-rev3, Built by MinGW-W64 project)</li>
+<li>AVG()函数只能作用于单个列，且计算式忽略列值为NULL的行。</li>
+<li>COUNT()函数有两种使用方式：<ul>
+<li>使用COUNT(*)对表中行的数目进行计数，不管表列中包含的是空值（NULL）还是非空值。</li>
+<li>使用COUNT(column)对特定列中具有值的行进行计数，忽略NULL值。</li>
 </ul>
-<hr>
+</li>
+<li>SUM()、MAX()和MIN()函数同样忽略列值为NULL的行。</li>
+<li>以上5个聚合函数均可如下使用：<ul>
+<li>对所有行执行计算，指定ALL参数或不指定参数（因为ALL是默认行为）。</li>
+<li>只包含不同的值，指定DISTINCT参数。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h1 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [<span class="keyword">column</span>,聚合] <span class="keyword">FROM</span> <span class="keyword">Table</span></div><div class="line"><span class="keyword">WHERE</span> ... <span class="keyword">GROUP</span> <span class="keyword">BY</span> (分组<span class="keyword">column</span>) <span class="keyword">HAVING</span> ... <span class="keyword">ORDER</span> <span class="keyword">BY</span> ...</div></pre></td></tr></table></figure>
+<p><strong>GROUP BY 的一些规定：</strong></p>
 <ul>
-<li>操作系统：Mac OSX 10.11.6</li>
-<li>编译器：Apple LLVM version 7.0.0 (clang-700.1.76) Target: x86_64-apple-darwin15.6.0 Thread model: posix</li>
+<li>GROUP BY子句可以包含任意数目的列，因而可以对分组进行嵌套，更细致地进行数据分组。</li>
+<li>如果在GROUP BY子句中嵌套了分组，数据将在最后指定的分组上进行汇总。换句话说，在建立分组时，指定的所有列都一起计算（所以不能从个别的列取回数据）。</li>
+<li>GROUP BY子句中列出的每一列都必须是检索列或有效的表达式（但不能是聚集函数）。如果在SELECT中使用表达式，则必须在GROUP BY子句中指定相同的表达式。不能使用别名。</li>
+<li>大多数SQL实现不允许GROUP BY列带有长度可变的数据类型（如文本或备注型字段）。</li>
+<li>除聚集计算语句外，SELECT语句中的每一列都必须在GROUP BY子句中给出。</li>
+<li>如果分组列中包含具有NULL值的行，则NULL将作为一个分组返回。如果列中有多行NULL值，它们将分为一组。</li>
+<li>GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。</li>
 </ul>
-</blockquote>
-<p><strong>1. 先看第一个表达式 0x01 &lt;&lt; 2+3</strong></p>
-<p>这个其实只是运算符的优先级问题，+ 的优先级比 &lt;&lt; 运算的优先级大，所以 <em>0x01 &lt;&lt; 2+3</em> 等效于 <em>0x01 &lt;&lt; (2+3)</em> 即结果为32。</p>
-<p><strong>2. 第二个表达式 0x01 &lt;&lt; 2+30</strong></p>
-<p>这个表达式等效于 <em>0x01 &lt;&lt; 32</em> ，测试代码如下：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line"><span class="keyword">int</span> k = <span class="number">0x40000000</span>; <span class="comment">//16进制的40000000,为2进制的 01000000...0000</span></div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x40000000&lt;&lt;1=%d\n"</span>,k&lt;&lt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x40000000&lt;&lt;2=%d\n"</span>,k&lt;&lt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x40000000&lt;&lt;3=%d\n"</span>,k&lt;&lt;<span class="number">3</span>);</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;31=%d\n"</span>,i&lt;&lt;<span class="number">31</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;32=%d\n"</span>,i&lt;&lt;<span class="number">32</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;33=%d\n"</span>,i&lt;&lt;<span class="number">33</span>);</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"0x80000000&lt;&lt;1=%d\n"</span>,<span class="number">0x80000000</span>&lt;&lt;<span class="number">1</span>); <span class="comment">//0x80000000 = -2147483648</span></div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;1=%d\n"</span>,j&lt;&lt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;2=%d\n"</span>,j&lt;&lt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;31=%d\n"</span>,j&lt;&lt;<span class="number">31</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;32=%d\n"</span>,j&lt;&lt;<span class="number">32</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&lt;&lt;33=%d\n"</span>,j&lt;&lt;<span class="number">33</span>);</div></pre></td></tr></table></figure>
-<p>结果为：</p>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="number">0x40000000</span>&lt;&lt;<span class="number">1</span>=<span class="number">-2147483648</span></div><div class="line"><span class="number">0x40000000</span>&lt;&lt;<span class="number">2</span>=<span class="number">0</span></div><div class="line"><span class="number">0x40000000</span>&lt;&lt;<span class="number">3</span>=<span class="number">0</span></div><div class="line"></div><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">31</span>=<span class="number">-2147483648</span></div><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">32</span>=<span class="number">1</span></div><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">33</span>=<span class="number">2</span></div><div class="line"></div><div class="line"><span class="number">0x80000000</span>&lt;&lt;<span class="number">1</span>=<span class="number">0</span>  <span class="comment">//即-2147483648&lt;&lt;1=0</span></div><div class="line"><span class="number">-1</span>&lt;&lt;<span class="number">1</span>=<span class="number">-2</span></div><div class="line"><span class="number">-1</span>&lt;&lt;<span class="number">2</span>=<span class="number">-4</span></div><div class="line"><span class="number">-1</span>&lt;&lt;<span class="number">31</span>=<span class="number">-2147483648</span></div><div class="line"><span class="number">-1</span>&lt;&lt;<span class="number">32</span>=<span class="number">-1</span></div><div class="line"><span class="number">-1</span>&lt;&lt;<span class="number">33</span>=<span class="number">-2</span></div></pre></td></tr></table></figure>
-<p>分析：</p>
+<p><strong>过滤分组：</strong></p>
+<p>HAVING支持所有WHERE操作符。</p>
 <blockquote>
-<p>-1的原码为 1000 0000 0000 0001<br>-1的反码为 1111 1111 1111 1110<br>-1的补码为 1111 1111 1111 1111<br>左移1位后的补码 1111 1111 1111 1110<br>左移1位后的原码 1000 0000 0000 0010</p>
+<p>HAVING 和 WHERE 的差别：<br>WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。这是一个重要的区别，WHERE排除的行不包括在分组中。<br>使用HAVING时应该结合GROUP BY子句，而WHERE子句用于标准的行级过滤。</p>
 </blockquote>
-<p>由此可见</p>
-<blockquote>
+<p><strong>分组和排序</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">ORDER BY</th>
+<th style="text-align:left">GROUP BY</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">对产生的输出排序</td>
+<td style="text-align:left">对行分组，但输出可能不是分组的顺序</td>
+</tr>
+<tr>
+<td style="text-align:left">任意列都可以使用（甚至非选择的列也可以使用）</td>
+<td style="text-align:left">只可能使用选择列或表达式列，而且必须使用每个选择列表达式</td>
+</tr>
+<tr>
+<td style="text-align:left">不一定需要</td>
+<td style="text-align:left">如果与聚集函数一起使用列（或表达式），则必须使用</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SELECT子句顺序</strong></p>
+<table>
+<thead>
+<tr>
+<th>子　　句</th>
+<th>说　　明</th>
+<th>是否必须使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT</td>
+<td>要返回的列或表达式</td>
+<td>是</td>
+</tr>
+<tr>
+<td>FROM</td>
+<td>从中检索数据的表</td>
+<td>仅在从表选择数据时使用</td>
+</tr>
+<tr>
+<td>WHERE</td>
+<td>行级过滤</td>
+<td>否</td>
+</tr>
+<tr>
+<td>GROUP BY</td>
+<td>分组说明</td>
+<td>仅在按组计算聚集时使用</td>
+</tr>
+<tr>
+<td>HAVING</td>
+<td>组级过滤</td>
+<td>否</td>
+</tr>
+<tr>
+<td>ORDER BY</td>
+<td>输出排序顺序</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<h1 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [column1,column2,...] <span class="keyword">FROM</span> tablename </div><div class="line"><span class="keyword">WHERE</span> condition [<span class="keyword">AND</span> | <span class="keyword">OR</span>] columnone </div><div class="line">[<span class="keyword">NOT</span>]<span class="keyword">IN</span> (<span class="keyword">SELECT</span> columnone <span class="keyword">FROM</span> tablename2 <span class="keyword">WHERE</span> ... <span class="keyword">IN</span> (SELECT...))</div></pre></td></tr></table></figure>
+<p>使用子查询应该注意的地方：</p>
 <ul>
-<li>在左移运算中，如果被操作数为有符号数，其最高位可以被覆盖</li>
-<li>若果移动位数超过数据类型最大位数时，编译器会按移动位数对改数据类型的位数取模的结果进行移位（<strong>适用于左移和右移</strong>）。即：1&lt;&lt;32 等效于 1&lt;&lt;(32%32) = 1&lt;&lt;0</li>
+<li>子查询的嵌套的数目没有限制，不过在实际使用时由于性能的限制，不能嵌套太多的子查询。</li>
+<li>作为子查询的SELECT语句只能查询单个列。企图检索多个列将返回错误。</li>
 </ul>
-</blockquote>
-<p><strong>3. 对于被操作数为负数的</strong></p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> j = <span class="number">-1</span>;</div><div class="line">    </div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&gt;&gt;1=%d\n"</span>,j&gt;&gt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&gt;&gt;2=%d\n"</span>,j&gt;&gt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-1&gt;&gt;3=%d\n"</span>,j&gt;&gt;<span class="number">3</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-2&gt;&gt;1=%d\n"</span>,<span class="number">-2</span>&gt;&gt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-4&gt;&gt;1=%d\n"</span>,<span class="number">-4</span>&gt;&gt;<span class="number">1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-2&gt;&gt;2=%d\n"</span>,<span class="number">-2</span>&gt;&gt;<span class="number">2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"-2&gt;&gt;3=%d\n"</span>,<span class="number">-2</span>&gt;&gt;<span class="number">3</span>);</div></pre></td></tr></table></figure>
-<p>计算结果：</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">-<span class="ruby"><span class="number">1</span><span class="meta">&gt;&gt;</span><span class="number">1</span>=-<span class="number">1</span></span></div><div class="line">-<span class="ruby"><span class="number">1</span><span class="meta">&gt;&gt;</span><span class="number">2</span>=-<span class="number">1</span></span></div><div class="line">-<span class="ruby"><span class="number">1</span><span class="meta">&gt;&gt;</span><span class="number">3</span>=-<span class="number">1</span></span></div><div class="line">-<span class="ruby"><span class="number">2</span><span class="meta">&gt;&gt;</span><span class="number">1</span>=-<span class="number">1</span></span></div><div class="line">-<span class="ruby"><span class="number">4</span><span class="meta">&gt;&gt;</span><span class="number">1</span>=-<span class="number">2</span></span></div><div class="line">-<span class="ruby"><span class="number">2</span><span class="meta">&gt;&gt;</span><span class="number">2</span>=-<span class="number">1</span></span></div><div class="line">-<span class="ruby"><span class="number">2</span><span class="meta">&gt;&gt;</span><span class="number">3</span>=-<span class="number">1</span></span></div></pre></td></tr></table></figure>
-<p><em>补充知识点</em></p>
+<h2 id="作为计算字段使用子查询"><a href="#作为计算字段使用子查询" class="headerlink" title="作为计算字段使用子查询"></a>作为计算字段使用子查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--需要查询Customers表中每个顾客的订单总数。订单与相应的顾客ID存储在Orders表中</span></div><div class="line"><span class="keyword">SELECT</span> cust_name, </div><div class="line">       cust_state,</div><div class="line">       (<span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*) </div><div class="line">        <span class="keyword">FROM</span> Orders </div><div class="line">        <span class="keyword">WHERE</span> Orders.cust_id = Customers.cust_id) <span class="keyword">AS</span> orders</div><div class="line"><span class="keyword">FROM</span> Customers </div><div class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> cust_name;</div><div class="line"><span class="comment">--------------------------------------------------------------</span></div><div class="line"><span class="comment">--完全限定列名：用一个句点分隔表名和列名，这种语法必须在有可能混淆列名时使用，此处是2个表的cust_id比较</span></div></pre></td></tr></table></figure>
+<h1 id="联结表"><a href="#联结表" class="headerlink" title="联结表"></a>联结表</h1><ul>
+<li><p><strong>创建联结</strong>  </p>
+<p><em>在一条SELECT语句中联结几个表时，相应的关系是在运行中构造的。在数据库表的定义中没有指示DBMS如何对表进行联结的内容。</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--prod_name和prod_price在一个表中，而vend_name在另一个表中。</span></div><div class="line"><span class="keyword">SELECT</span> vend_name, prod_name, prod_price</div><div class="line"><span class="keyword">FROM</span> Vendors, Products</div><div class="line"><span class="keyword">WHERE</span> Vendors.vend_id = Products.vend_id;</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>：没有WHERE子句，第一个表中的每一行将与第二个表中的每一行配对，而不管它们逻辑上是否能配在一起。</p>
+<p>目前为止使用的联结称为<strong>等值联结（equijoin）</strong>，它基于两个表之间的相等测试。这种联结也称为<strong>内联结（inner join）</strong>。其实，可以对这种联结使用稍微不同的语法，明确指定联结的类型。下面的SELECT语句返回与前面例子完全相同的数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> vend_name, prod_name, prod_price</div><div class="line"><span class="keyword">FROM</span> Vendors <span class="keyword">INNER</span> <span class="keyword">JOIN</span> Products</div><div class="line"> <span class="keyword">ON</span> Vendors.vend_id = Products.vend_id;</div></pre></td></tr></table></figure>
 <blockquote>
-<p><strong>逻辑左移=算数左移，右边统一添 0<br>逻辑右移，左边统一添 0<br>算数右移，左边添加的数和符号有关</strong></p>
-<p><em>C语言的标准指出，无符号数执行的所有移位操作都是逻辑的，而对于有符号数，采用哪种方式取决于编译器。算术左移和逻辑左移是相同的，而算术右移和逻辑右移，取决于符号位。（嵌入式移植时需要注意）</em></p>
+<p><strong>笛卡儿积（cartesian product）</strong><br>由没有联结条件的表关系返回的结果为笛卡儿积。检索出的行的数目将是第一个表中的行数乘以第二个表中的行数。</p>
+<p><strong>叉联结（cross join）</strong><br>有时，返回笛卡儿积的联结，也称叉联结。</p>
 </blockquote>
-<p>分析：</p>
+</li>
+<li><p><strong>子查询和联接：</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers</div><div class="line"><span class="keyword">WHERE</span> cust_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> cust_id</div><div class="line">                  <span class="keyword">FROM</span> Orders</div><div class="line">                  <span class="keyword">WHERE</span> order_num <span class="keyword">IN</span> (<span class="keyword">SELECT</span> order_num</div><div class="line">                                      <span class="keyword">FROM</span> OrderItems</div><div class="line">                                      <span class="keyword">WHERE</span> prod_id = <span class="string">'RGAN01'</span>));</div></pre></td></tr></table></figure>
+<p>等效于：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers, Orders, OrderItems</div><div class="line"><span class="keyword">WHERE</span> Customers.cust_id = Orders.cust_id</div><div class="line"> <span class="keyword">AND</span> OrderItems.order_num = Orders.order_num</div><div class="line"> <span class="keyword">AND</span> prod_id = <span class="string">'RGAN01'</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建高级联结</strong></p>
+<p>迄今为止，我们使用的只是  <strong>内联结</strong> 或 <strong>等值联结</strong> 的简单联结。现在来看三种其他联结：<strong>自联结（self-join）</strong>、<strong>自然联结（natural join）</strong>和<strong>外联结（outer join）</strong>。</p>
 <blockquote>
-<p>-4的原码为 1000 0000 0000 0100<br>-4的反码为 1111 1111 1111 1011<br>-4的补码为 1111 1111 1111 1100<br>-4左移1位后的补码 1111 1111 1111 1110<br>-4左移1位后的原码 1000 0000 0000 0010<br>所以在 gcc 和 clang 中应该采用的是<strong>算数右移</strong></p>
-</blockquote>
-<p><strong>4. 对于第三个表达式 0x01 &lt;&lt; 2-3</strong></p>
-<p>测试代码</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;31=%d\n"</span>,i&lt;&lt;<span class="number">31</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;-1=%d\n"</span>,i&lt;&lt;<span class="number">-1</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;-2=%d\n"</span>,i&lt;&lt;<span class="number">-2</span>);</div><div class="line"><span class="built_in">printf</span>(<span class="string">"1&lt;&lt;-3=%d\n"</span>,i&lt;&lt;<span class="number">-3</span>);</div></pre></td></tr></table></figure>
-<p>计算结果：</p>
-<figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">31</span>=<span class="number">-2147483648</span></div><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">-1</span>=<span class="number">-2147483648</span></div><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">-2</span>=<span class="number">1073741824</span></div><div class="line"><span class="number">1</span>&lt;&lt;<span class="number">-3</span>=<span class="number">536870912</span></div></pre></td></tr></table></figure>
-<p>分析：</p>
-<blockquote>
+<p>sqlite3 定义了三种主要类型的连接：</p>
 <ul>
-<li>对于移动位数是负数 x ，其移动位数按 x 的补码对32取余数的结果移位。</li>
+<li>交叉连接 - CROSS JOIN （笛卡尔积 x*y）</li>
+<li>内连接 - INNER JOIN    (默认是内连接,  inner 可以省略, 左右表都满足条件才显示)</li>
+<li>外连接 - OUTER JOIN (sqlite3只支持 Left连接， 用右表来匹配左表，即每一行先从左表拿一条数据，再去右表找，右表没有找到，右表的项显示空，但是左表还是会显示) </li>
 </ul>
 </blockquote>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>对于左移和右移总结如下：</p>
-<blockquote>
 <ul>
-<li><strong>1. 移动位数不能超过操作数据类型的最大位数，否则对最大位数求余后移动；</strong></li>
-<li><strong>2. 如果移动位数为负数，则移动位数为负数补码对操作数据类型位数求余结果移位；</strong></li>
-<li><strong>3. 对于左移，左移后的位补零，最高位符号位可以被覆盖；</strong></li>
-<li><strong>4. 对于右移，正常右移分逻辑右移和算术右移，由编译器决定；</strong></li>
-<li><strong>5. 对于右移，如果被操作数为负数，则将其转换成补码，然后正常右移得到原码结果。</strong></li>
+<li><p><strong>自联结（self-join）</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 子查询写法</span></div><div class="line"><span class="comment">-----------------------------------------------------------</span></div><div class="line"><span class="keyword">SELECT</span> cust_id, cust_name, cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers</div><div class="line"><span class="keyword">WHERE</span> cust_name = (<span class="keyword">SELECT</span> cust_name</div><div class="line">                   <span class="keyword">FROM</span> Customers</div><div class="line">                   <span class="keyword">WHERE</span> cust_contact = <span class="string">'Jim Jones'</span>);</div><div class="line"></div><div class="line"><span class="comment">-- 自联结（self-join）</span></div><div class="line"><span class="comment">-----------------------------------------------------------</span></div><div class="line"><span class="keyword">SELECT</span> c1.cust_id, c1.cust_name, c1.cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers <span class="keyword">AS</span> c1, Customers <span class="keyword">AS</span> c2</div><div class="line"><span class="keyword">WHERE</span> c1.cust_name = c2.cust_name</div><div class="line"> <span class="keyword">AND</span> c2.cust_contact = <span class="string">'Jim Jones'</span>;</div><div class="line"></div><div class="line"><span class="comment">--此查询中需要的两个表实际上是相同的表，为了解决Customers的引用歧义性，使用表别名。Customers第一次出现用了别名C1，第二次出现用了别名C2。</span></div></pre></td></tr></table></figure>
+<p><em>需要注意，表别名只在查询执行中使用。与列别名不一样，表别名不返回到客户端。</em></p>
+</li>
+<li><p><strong>自然联结（natural join）</strong><br>无论何时对表进行联结，应该至少有一列不止出现在一个表中（被联结的列）。标准的联结（内联结）返回所有数据，相同的列甚至多次出现。自然联结排除多次出现，使每一列只返回一次。</p>
+<p>自然联结要求你只能选择那些唯一的列，一般通过对一个表使用通配符（SELECT *），而对其他表的列使用明确的子集来完成。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> C.*, O.order_num, O.order_date,</div><div class="line">       OI.prod_id, OI.quantity, OI.item_price</div><div class="line"><span class="keyword">FROM</span> Customers <span class="keyword">AS</span> C, Orders <span class="keyword">AS</span> O, OrderItems <span class="keyword">AS</span> OI</div><div class="line"><span class="keyword">WHERE</span> C.cust_id = O.cust_id</div><div class="line"> <span class="keyword">AND</span> OI.order_num = O.order_num</div><div class="line"> <span class="keyword">AND</span> prod_id = <span class="string">'RGAN01'</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p><strong>外联结（outer join）</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> table1 [<span class="keyword">left</span> | <span class="keyword">right</span> | <span class="keyword">full</span>] <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> table2 <span class="keyword">ON</span> conditional</div></pre></td></tr></table></figure>
+<p><em>全外联结（full outer join），它检索两个表中的所有行并关联那些可以关联的行。与左外联结或右外联结包含一个表的不关联的行不同，全外联结包含两个表的不关联的行。</em></p>
+</li>
 </ul>
-</blockquote>
-<p><em><a href="https://faramitaliu.github.io/" target="_blank" rel="external">博客地址</a>：<a href="https://faramitaliu.github.io/" target="_blank" rel="external">https://faramitaliu.github.io/</a></em></p>
+</li>
+</ul>
+<h1 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h1><p>SQL允许执行多个查询（多条SELECT语句），并将结果作为一个查询结果集返回。这些组合查询通常称为<strong>并（union）</strong> 或 <strong>复合查询（compound query）</strong>。</p>
+<ul>
+<li>主要有两种情况需要使用组合查询：<ul>
+<li>在一个查询中从不同的表返回结构数据；</li>
+<li>对一个表执行多个查询，按一个查询返回数据。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [] <span class="keyword">FROM</span> tablename1 <span class="keyword">WHERE</span> conditional1</div><div class="line"><span class="keyword">UNION</span> </div><div class="line"><span class="keyword">SELECT</span> [] <span class="keyword">FROM</span> tablename2 <span class="keyword">WHERE</span> conditional2</div></pre></td></tr></table></figure>
+<p><strong>UNION使用的规则</strong></p>
+<ul>
+<li>UNION必须由两条或两条以上的SELECT语句组成，语句之间用关键字UNION分隔（因此，如果组合四条SELECT语句，将要使用三个UNION关键字）。</li>
+<li>UNION中的每个查询必须包含相同的列、表达式或聚集函数（不过，各个列不需要以相同的次序列出）。</li>
+<li>列数据类型必须兼容：类型不必完全相同，但必须是DBMS可以隐含转换的类型（例如，不同的数值类型或不同的日期类型）。</li>
+</ul>
+<p><strong><em>其他说明</em></strong></p>
+<ul>
+<li><em>UNION从查询结果集中自动去除了重复的行；如果想返回所有的匹配行，可使用UNION ALL而不是UNION。</em></li>
+<li><em>在用UNION组合查询时，只能使用一条ORDER BY子句，它必须位于最后一条SELECT语句之后。</em></li>
+<li><em>其他类型的UNION，某些DBMS还支持另外两种UNION：EXCEPT（有时称为MINUS）可用来检索只在第一个表中存在而在第二个表中不存在的行；而INTERSECT可用来检索两个表中都存在的行。</em></li>
+</ul>
+<p><a href="https://faramitaliu.github.io/" target="_blank" rel="external">博客地址</a> : <a href="http://liuzhiqiang.tech" target="_blank" rel="external">liuzhiqiang.tech</a></p>
 
       
 
@@ -363,7 +589,15 @@ var _hmt = _hmt || [];
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">C</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">SQLite3</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Database</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SQL</a>
         		</li>
       		
 		</ul>
@@ -419,7 +653,7 @@ var _hmt = _hmt || [];
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/02/20/shift_left_right/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=http://yoursite.com/2017/03/01/sql_must_know_will_be/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -433,15 +667,11 @@ var _hmt = _hmt || [];
   
 <nav id="article-nav">
   
-    <a href="/2017/02/28/repair_sqlite3_db/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          修复sqlite3数据库
-        
-      </div>
-    </a>
   
+    <a href="/2017/02/28/repair_sqlite3_db/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">修复sqlite3数据库</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
@@ -453,7 +683,7 @@ var _hmt = _hmt || [];
   
   <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="shift_left_right" data-title="关于C语言左移和右移的一点问题" data-url="http://yoursite.com/2017/02/20/shift_left_right/"></div>
+	<div class="ds-thread" data-thread-key="sql_must_know_will_be" data-title="SQL必知必会(上)" data-url="http://yoursite.com/2017/03/01/sql_must_know_will_be/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
