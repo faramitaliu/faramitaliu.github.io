@@ -8,16 +8,28 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>SQL必知必会(下) | faramitaliu博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="SQL必知必会(上) 主要是查询语句SELECT相关的使用，接下来进行增、删、改的学习。">
+  <meta name="description" content="SQL必知必会(上) 主要是查询语句SELECT相关的使用，接下来进行增、删、改的学习。
+
+数据插入1234--方式一INSERT INTO tablename VALUES(val1,val2,...)--方式二INSERT INTO tablename(column1,column2,...) VALUES(val1,val2,...)
+
+方式一中，VALUES的值必须按照表定义中出现的次序">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SQL必知必会(下)">
 <meta property="og:url" content="http://yoursite.com/2017/03/09/sql_must_know_will_be_xia/index.html">
 <meta property="og:site_name" content="faramitaliu博客">
-<meta property="og:description" content="SQL必知必会(上) 主要是查询语句SELECT相关的使用，接下来进行增、删、改的学习。">
-<meta property="og:updated_time" content="2017-03-09T13:22:02.000Z">
+<meta property="og:description" content="SQL必知必会(上) 主要是查询语句SELECT相关的使用，接下来进行增、删、改的学习。
+
+数据插入1234--方式一INSERT INTO tablename VALUES(val1,val2,...)--方式二INSERT INTO tablename(column1,column2,...) VALUES(val1,val2,...)
+
+方式一中，VALUES的值必须按照表定义中出现的次序">
+<meta property="og:updated_time" content="2017-03-11T13:24:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SQL必知必会(下)">
-<meta name="twitter:description" content="SQL必知必会(上) 主要是查询语句SELECT相关的使用，接下来进行增、删、改的学习。">
+<meta name="twitter:description" content="SQL必知必会(上) 主要是查询语句SELECT相关的使用，接下来进行增、删、改的学习。
+
+数据插入1234--方式一INSERT INTO tablename VALUES(val1,val2,...)--方式二INSERT INTO tablename(column1,column2,...) VALUES(val1,val2,...)
+
+方式一中，VALUES的值必须按照表定义中出现的次序">
   
     <link rel="alternative" href="/atom.xml" title="faramitaliu博客" type="application/atom+xml">
   
@@ -201,7 +213,6 @@ var _hmt = _hmt || [];
         <blockquote>
 <p><a href="http://liuzhiqiang.tech/2017/03/01/sql_must_know_will_be/" target="_blank" rel="external">SQL必知必会(上)</a> 主要是查询语句<code>SELECT</code>相关的使用，接下来进行增、删、改的学习。</p>
 </blockquote>
-<a id="more"></a>
 <h1 id="数据插入"><a href="#数据插入" class="headerlink" title="数据插入"></a>数据插入</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--方式一</span></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tablename <span class="keyword">VALUES</span>(val1,val2,...)</div><div class="line"><span class="comment">--方式二</span></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tablename(column1,column2,...) <span class="keyword">VALUES</span>(val1,val2,...)</div></pre></td></tr></table></figure>
 <ul>
 <li>方式一中，<code>VALUES</code>的值必须按照表定义中出现的次序填充每个列的值，没有列值的应当填NULL；</li>
@@ -211,6 +222,7 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 </ul>
+<a id="more"></a>
 <p><strong>插入检索出的数据</strong></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tablename1(column1,column2,...) <span class="keyword">SELECT</span> column1,column2,... <span class="keyword">FROM</span> tablename2</div></pre></td></tr></table></figure>
 <ul>
@@ -581,15 +593,15 @@ var _hmt = _hmt || [];
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">SQLite3</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Database</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C</a>
               </li>
              
               <li class="article-tag-list-item">
