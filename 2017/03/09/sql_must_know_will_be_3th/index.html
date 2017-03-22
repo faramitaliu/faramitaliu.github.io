@@ -1,0 +1,142 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SQL必知必会(下)-插入、更新与事务 · faramitaliu博客</title><meta name="description" content="SQL必知必会(下)-插入、更新与事务 - faramitaliu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="faramitaliu博客"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/faramitaliu" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/faramitaliu" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="mailto:694076505@qq.com" target="_self" class="nav-list-link">MAIL</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SQL必知必会(下)-插入、更新与事务</h1><div class="post-info">2017年3月9日</div><div class="post-content"><blockquote>
+<p><a href="http://liuzhiqiang.tech/2017/03/01/sql_must_know_will_be/" target="_blank" rel="external">SQL必知必会(上)</a> 主要是查询语句<code>SELECT</code>相关的使用，接下来进行增、删、改的学习。</p>
+</blockquote>
+<h1 id="数据插入"><a href="#数据插入" class="headerlink" title="数据插入"></a>数据插入</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--方式一</span></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tablename <span class="keyword">VALUES</span>(val1,val2,...)</div><div class="line"><span class="comment">--方式二</span></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tablename(column1,column2,...) <span class="keyword">VALUES</span>(val1,val2,...)</div></pre></td></tr></table></figure>
+<ul>
+<li>方式一中，<code>VALUES</code>的值必须按照表定义中出现的次序填充每个列的值，没有列值的应当填NULL；</li>
+<li>方式二中，提供了列名(可以是全部或者部分)，<code>VALUES</code>必须以其指定的次序匹配指定的列名，不一定按各列出现在表中的实际次序。省略列时应注意如下：<ul>
+<li>该列定义为允许NULL值（无值或空值）。</li>
+<li>在表定义中给出默认值。这表示如果不给出值，将使用默认值。</li>
+</ul>
+</li>
+</ul>
+<a id="more"></a>
+<p><strong>插入检索出的数据</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> tablename1(column1,column2,...) <span class="keyword">SELECT</span> column1,column2,... <span class="keyword">FROM</span> tablename2</div></pre></td></tr></table></figure>
+<ul>
+<li><p>上述操作会插入<strong>所有</strong>被筛选出来的值。但是要注意tablename2表中的主键值不能和tablename1中的主键值相同，否者后续的<code>INSERT</code>会插入失败。</p>
+</li>
+<li><p>不一定要求列名匹配。事实上，DBMS一点儿也不关心<code>SELECT</code>返回的列名。它使用的是列的位置，因此<code>SELECT</code>中的第一列（不管其列名）将用来填充表列中指定的第一列，第二列将用来填充表列中指定的第二列，如此等等。</p>
+</li>
+</ul>
+<p><strong>从一个表复制到另一个表</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">INTO</span> CustCopy <span class="keyword">FROM</span> Customers;</div><div class="line"><span class="comment">--不同数据的语法稍有不同，下面语句在SQLite中测试通过</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> CustCopy <span class="keyword">AS</span> <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> Customers;</div></pre></td></tr></table></figure>
+<ul>
+<li>要将一个表的内容复制到一个全新的表（运行中创建的表），可以使用<code>SELECT INTO</code>语句。</li>
+<li>可以复制全部或者部分列，只需将<code>通配符*</code>改成相应列名即可。</li>
+<li>任何<code>SELECT</code>选项和子句都可以使用，包括<code>WHERE</code>和<code>GROUP BY</code>；</li>
+<li>可利用联结从多个表插入数据；</li>
+<li>不管从多少个表中检索数据，数据都只能插入到一个表中。</li>
+</ul>
+<h1 id="更新和删除数据"><a href="#更新和删除数据" class="headerlink" title="更新和删除数据"></a>更新和删除数据</h1><p><strong>更新数据</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">UPDATE</span> Customers</div><div class="line"><span class="keyword">SET</span> cust_contact = <span class="string">'Sam Roberts'</span>,</div><div class="line">    cust_email = <span class="string">'sam@toyland.com'</span></div><div class="line"><span class="keyword">WHERE</span> cust_id = <span class="string">'1000000006'</span></div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>UPDATE</code>语句中可以使用子查询，使得能用<code>SELECT</code>语句检索出的数据更新列数据。</li>
+<li>要删除某个列的值，可设置它为<code>NULL</code>（假如表定义允许<code>NULL</code>值）</li>
+</ul>
+<p><strong>删除数据</strong><br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> tablename <span class="keyword">WHERE</span> condition</div></pre></td></tr></table></figure></p>
+<ul>
+<li>如果想从表中删除所有行，不要使用<code>DELETE</code>。可使用<code>TRUNCATE TABLE</code>语句，它完成相同的工作，而速度更快（因为不记录数据的变动）。（SQLite3不支持，可以使用<code>DROP TABLE</code>来删除重建）</li>
+</ul>
+<h1 id="创建和操纵表"><a href="#创建和操纵表" class="headerlink" title="创建和操纵表"></a>创建和操纵表</h1><p><strong>创建表</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Products</div><div class="line">(</div><div class="line">    prod_id       <span class="built_in">INTEGER</span>           PRIMARY <span class="keyword">KEY</span> AUTOINCREMENT <span class="keyword">UNIQUE</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">    vend_id       <span class="built_in">CHAR</span>(<span class="number">10</span>)          <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">    prod_name     <span class="built_in">CHAR</span>(<span class="number">254</span>)         <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">    prod_price    <span class="built_in">DECIMAL</span>(<span class="number">8</span>,<span class="number">2</span>)      <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">    prod_desc     <span class="built_in">VARCHAR</span>(<span class="number">1000</span>)     <span class="literal">NULL</span></div><div class="line">);</div></pre></td></tr></table></figure>
+<ul>
+<li><code>NULL</code>值是没有值，不是空字符串。如果指定’’（两个单引号，其间没有字符），这在<code>NOT NULL</code>列中是允许的。空字符串是一个有效的值，它不是无值。<code>NULL</code>值用关键字<code>NULL</code>而不是空字符串指定。</li>
+<li>SQL允许指定默认值，在插入行时如果不给出值，DBMS将自动采用默认值。默认值在<code>CREATE TABLE</code>语句的列定义中用关键字<code>DEFAULT</code>指定。</li>
+</ul>
+<p><strong>更新表</strong></p>
+<ul>
+<li><p>增加列</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Vendors <span class="keyword">ADD</span> vend_phone <span class="built_in">CHAR</span>(<span class="number">20</span>);</div></pre></td></tr></table></figure>
+</li>
+<li><p>删除列（SQLite3不支持）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Vendors <span class="keyword">DROP</span> <span class="keyword">COLUMN</span> vend_phone <span class="built_in">CHAR</span>(<span class="number">20</span>);</div></pre></td></tr></table></figure>
+<p><em>SQLite对使用ALTER TABLE执行的操作有所限制。最重要的一个限制是，它不支持使用ALTER TABLE定义主键和外键，这些必须在最初创建表时指定。</em></p>
+</li>
+<li><p>删除表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Vendors;</div></pre></td></tr></table></figure>
+</li>
+<li><p>重命名表（SQLite3测试支持）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> oldname <span class="keyword">RENAME</span> <span class="keyword">TO</span> newname</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h1><p>  <em>SQLite仅支持只读视图，所以视图可以创建，可以读，但其内容不能更改。</em></p>
+<p>视图：为虚拟的表。它们包含的不是数据而是根据需要检索数据的查询。视图提供了一种封装SELECT语句的层次，可用来简化数据处理，重新格式化或保护基础数据。一些常见应用：</p>
+<ul>
+<li>重用SQL语句。</li>
+<li>简化复杂的SQL操作。在编写查询后，可以方便地重用它而不必知道其基本查询细节。</li>
+</ul>
+<hr>
+<ul>
+<li><p>创建视图</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--利用视图简化复杂的联结</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> ProductCustomers <span class="keyword">AS</span></div><div class="line"><span class="keyword">SELECT</span> cust_name, cust_contact, prod_id</div><div class="line"><span class="keyword">FROM</span> Customers, Orders, OrderItems</div><div class="line"><span class="keyword">WHERE</span> Customers.cust_id = Orders.cust_id</div><div class="line"> <span class="keyword">AND</span> OrderItems.order_num = Orders.order_num;</div><div class="line"></div><div class="line"><span class="comment">--用视图重新格式化检索出的数据</span></div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> VendorLocations <span class="keyword">AS</span></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(vend_name) || <span class="string">' ('</span> || <span class="keyword">RTRIM</span>(vend_country) || <span class="string">')'</span></div><div class="line"><span class="keyword">AS</span> vend_title</div><div class="line"><span class="keyword">FROM</span> Vendors;</div><div class="line"></div><div class="line"><span class="comment">--用视图过滤不想要的数据</span></div><div class="line"><span class="comment">--使用视图与计算字段</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>视图重命名</p>
+<p>删除视图，可以使用DROP语句，其语法为DROP VIEW viewname;。<br>覆盖（或更新）视图，必须先删除它，然后再重新创建。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h1><p>使用事务处理（transaction processing），通过确保成批的SQL操作要么完全执行，要么完全不执行，来维护数据库的完整性。</p>
+<p>几个术语：</p>
+<ul>
+<li><p>事务（transaction）指一组SQL语句；</p>
+</li>
+<li><p>回退（rollback）指撤销指定SQL语句的过程；</p>
+</li>
+<li><p>提交（commit）指将未存储的SQL语句结果写入数据库表；</p>
+</li>
+<li><p>保留点（savepoint）指事务处理中设置的临时占位符（placeholder），可以对它发布回退（与回退整个事务处理不同）。</p>
+<blockquote>
+<p>可以回退哪些语句？<br>事务处理用来管理INSERT、UPDATE和DELETE语句。不能回退SELECT语句（回退SELECT语句也没有必要），也不能回退CREATE或DROP操作。事务处理中可以使用这些语句，但进行回退时，这些操作也不撤销。</p>
+</blockquote>
+</li>
+</ul>
+<p>SQLite3支持的语句：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">BEGIN</span> <span class="keyword">TRANSACTION</span> 或者 <span class="keyword">BEGIN</span> <span class="comment">--开始事务</span></div><div class="line"><span class="keyword">COMMIT</span> 或者 <span class="keyword">END</span> <span class="keyword">TRANSACTION</span> <span class="comment">--提交事务</span></div><div class="line"><span class="keyword">ROLLBACK</span> <span class="comment">--回滚操作</span></div></pre></td></tr></table></figure></p>
+<h1 id="存储过程和游标"><a href="#存储过程和游标" class="headerlink" title="存储过程和游标"></a>存储过程和游标</h1><p><em>SQLite3不支持存储过程和游标。</em></p>
+<h1 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h1><p><strong>作为主键（PRIMARY KEY）的条件</strong></p>
+<ul>
+<li>任意两行的主键值都不相同。</li>
+<li>每行都具有一个主键值（即列中不允许NULL值）。</li>
+</ul>
+<ul>
+<li>包含主键值的列从不修改或更新。（大多数DBMS不允许这么做，但如果你使用的DBMS允许这样做，好吧，千万别！）</li>
+<li>主键值不能重用。如果从表中删除某一行，其主键值不分配给新行。</li>
+</ul>
+<p><strong>外键（REFERENCES）</strong></p>
+<p>外键是表中的一列，其值必须列在另一表的主键中。外键是保证引用完整性的极其重要部分（外键有助防止意外删除）。</p>
+<p>SQLite3用法（定义字段时使用）：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">FOREIGN KEY(columnname) REFERENCES tablename(column1)</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>在SQLite中启用外键支持</strong></p>
+<p>1)为了在SQLite中使用外键约束, 编译sqlite库时, 不能使用 忽略 外键和触发器, 也就是 SQLITE_OMIT_FOREIGN_KEY 和 SQLITE_OMIT_TRIGGER不能被定义</p>
+<p>2)必须在运行时打开, 因为  默认是关闭的</p>
+<p>PRAGMA foreign_keys = ON;</p>
+<p><em>编程时：sqlite3_exec(ppDb, “PRAGMA foreign_keys = ON;”, 0, 0, 0);</em></p>
+</blockquote>
+<p>其他写法：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Orders</div><div class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span></div><div class="line">FOREIGN <span class="keyword">KEY</span> (cust_id) <span class="keyword">REFERENCES</span> Customers (cust_id)</div></pre></td></tr></table></figure></p>
+<p><strong>唯一约束（UNIQUE）</strong></p>
+<p>唯一约束用来保证一列（或一组列）中的数据是唯一的。它们类似于主键，但存在以下重要区别。</p>
+<ul>
+<li>表可包含多个唯一约束，但每个表只允许一个主键。</li>
+<li>唯一约束列可包含NULL值。</li>
+<li><p>唯一约束列可修改或更新。</p>
+</li>
+<li><p>唯一约束列的值可重复使用。</p>
+</li>
+<li>与主键不一样，唯一约束不能用来定义外键。</li>
+</ul>
+<p><strong>检测约束</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">插入字段时： quantity INTEGER NOT NULL <span class="keyword">CHECK</span> (quantity &gt; <span class="number">0</span>)</div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span>检查名为gender的列只包含M或F：<span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> <span class="keyword">CHECK</span> (gender <span class="keyword">LIKE</span> <span class="string">'[MF]'</span>)</div></pre></td></tr></table></figure>
+<p><strong>索引</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">INDEX</span> prod_name_ind <span class="keyword">ON</span> PRODUCTS (prod_name);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>索引必须唯一命名。这里的索引名prod_name_ind在关键字CREATE INDEX之后定义。ON用来指定被索引的表，而索引中包含的列（此例中仅有一列）在表名后的圆括号中给出。</p>
+</blockquote>
+<p><strong>触发器</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span>  <span class="keyword">TRIGGER</span> trigger_name [<span class="keyword">BEFORE</span>|<span class="keyword">AFTER</span>] event_name </div><div class="line"><span class="keyword">ON</span> table_name</div><div class="line"><span class="keyword">BEGIN</span></div><div class="line"> <span class="comment">-- Trigger logic goes here....</span></div><div class="line"><span class="keyword">END</span>;</div></pre></td></tr></table></figure>
+<p>在这里，<strong>event_name</strong> 可以是在所提到的表 <strong>table_name</strong> 上的 <em>INSERT、DELETE 和 UPDATE</em> 数据库操作。您可以在表名后选择指定 FOR EACH ROW。</p>
+<p>以下是在 UPDATE 操作上在表的一个或多个指定列上创建触发器（Trigger）的语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span>  <span class="keyword">TRIGGER</span> trigger_name [<span class="keyword">BEFORE</span>|<span class="keyword">AFTER</span>] <span class="keyword">UPDATE</span> <span class="keyword">OF</span> column_name </div><div class="line"><span class="keyword">ON</span> table_name</div><div class="line"><span class="keyword">BEGIN</span></div><div class="line"> <span class="comment">-- Trigger logic goes here....</span></div><div class="line"><span class="keyword">END</span>;</div></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1]  SQLite支持的SQL语句：<a href="http://www.sqlite.org/lang.html" target="_blank" rel="external">http://www.sqlite.org/lang.html</a></p>
+<p>[2]  SQLite3菜鸟教程：<a href="http://www.runoob.com/sqlite/sqlite-tutorial.html" target="_blank" rel="external">http://www.runoob.com/sqlite/sqlite-tutorial.html</a></p>
+<p>-——————————<br><a href="https://faramitaliu.github.io/" target="_blank" rel="external">博客地址</a> : <a href="http://liuzhiqiang.tech" target="_blank" rel="external">liuzhiqiang.tech</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/2017/03/21/htop_port_for_armlinux/" class="prev">PREV</a><a href="/2017/03/02/sql_must_know_will_be_2nd/" class="next">NEXT</a></div><div class="copyright"><p>© 2017 <a href="http://yoursite.com">faramitaliu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-90572674-1",'auto');ga('send','pageview');</script></body></html>

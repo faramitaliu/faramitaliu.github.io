@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SQL必知必会(中)-子查询、组合查询与连结 · faramitaliu博客</title><meta name="description" content="SQL必知必会(中)-子查询、组合查询与连结 - faramitaliu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="faramitaliu博客"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/faramitaliu" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/faramitaliu" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="mailto:694076505@qq.com" target="_self" class="nav-list-link">MAIL</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SQL必知必会(中)-子查询、组合查询与连结</h1><div class="post-info">2017年3月2日</div><div class="post-content"><blockquote>
+<p>接上篇<a href="http://liuzhiqiang.tech/2017/03/01/sql_must_know_will_be_1st/" target="_blank" rel="external">《SQL必知必会(上)-查询、计算与分组》</a></p>
+</blockquote>
+<h1 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [column1,column2,...] <span class="keyword">FROM</span> tablename </div><div class="line"><span class="keyword">WHERE</span> condition [<span class="keyword">AND</span> | <span class="keyword">OR</span>] columnone </div><div class="line">[<span class="keyword">NOT</span>]<span class="keyword">IN</span> (<span class="keyword">SELECT</span> columnone <span class="keyword">FROM</span> tablename2 <span class="keyword">WHERE</span> ... <span class="keyword">IN</span> (SELECT...))</div></pre></td></tr></table></figure>
+<p>使用子查询应该注意的地方：</p>
+<ul>
+<li>子查询的嵌套的数目没有限制，不过在实际使用时由于性能的限制，不能嵌套太多的子查询。</li>
+<li>作为子查询的SELECT语句只能查询单个列。企图检索多个列将返回错误。</li>
+</ul>
+<a id="more"></a>
+<h2 id="作为计算字段使用子查询"><a href="#作为计算字段使用子查询" class="headerlink" title="作为计算字段使用子查询"></a>作为计算字段使用子查询</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--需要查询Customers表中每个顾客的订单总数。订单与相应的顾客ID存储在Orders表中</span></div><div class="line"><span class="comment">--完全限定列名：用一个句点分隔表名和列名，这种语法必须在有可能混淆列名时使用，此处是2个表的cust_id比较</span></div><div class="line"><span class="keyword">SELECT</span> cust_name, </div><div class="line">       cust_state,</div><div class="line">       (<span class="keyword">SELECT</span> <span class="keyword">COUNT</span>(*) </div><div class="line">        <span class="keyword">FROM</span> Orders </div><div class="line">        <span class="keyword">WHERE</span> Orders.cust_id = Customers.cust_id) <span class="keyword">AS</span> orders</div><div class="line"><span class="keyword">FROM</span> Customers </div><div class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> cust_name;</div></pre></td></tr></table></figure>
+<h1 id="联结表"><a href="#联结表" class="headerlink" title="联结表"></a>联结表</h1><ul>
+<li><strong>创建联结</strong>  </li>
+</ul>
+<p><em>在一条SELECT语句中联结几个表时，相应的关系是在运行中构造的。在数据库表的定义中没有指示DBMS如何对表进行联结的内容。</em></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--prod_name和prod_price在一个表中，而vend_name在另一个表中。</span></div><div class="line"><span class="keyword">SELECT</span> vend_name, prod_name, prod_price</div><div class="line"><span class="keyword">FROM</span> Vendors, Products</div><div class="line"><span class="keyword">WHERE</span> Vendors.vend_id = Products.vend_id;</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>：没有WHERE子句，第一个表中的每一行将与第二个表中的每一行配对，而不管它们逻辑上是否能配在一起。</p>
+<p>目前为止使用的联结称为<strong>等值联结（equijoin）</strong>，它基于两个表之间的相等测试。这种联结也称为<strong>内联结（inner join）</strong>。其实，可以对这种联结使用稍微不同的语法，明确指定联结的类型。下面的SELECT语句返回与前面例子完全相同的数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> vend_name, prod_name, prod_price</div><div class="line"><span class="keyword">FROM</span> Vendors <span class="keyword">INNER</span> <span class="keyword">JOIN</span> Products</div><div class="line"><span class="keyword">ON</span> Vendors.vend_id = Products.vend_id;</div></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>笛卡儿积（cartesian product）</strong><br>由没有联结条件的表关系返回的结果为笛卡儿积。检索出的行的数目将是第一个表中的行数乘以第二个表中的行数。</p>
+<p><strong>叉联结（cross join）</strong><br>有时，返回笛卡儿积的联结，也称叉联结。</p>
+</blockquote>
+<ul>
+<li><strong>子查询和联接：</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers</div><div class="line"><span class="keyword">WHERE</span> cust_id <span class="keyword">IN</span> (<span class="keyword">SELECT</span> cust_id</div><div class="line">      <span class="keyword">FROM</span> Orders</div><div class="line">      <span class="keyword">WHERE</span> order_num <span class="keyword">IN</span> (<span class="keyword">SELECT</span> order_num</div><div class="line">            <span class="keyword">FROM</span> OrderItems</div><div class="line">            <span class="keyword">WHERE</span> prod_id = <span class="string">'RGAN01'</span>));</div></pre></td></tr></table></figure>
+<p>等效于：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> cust_name, cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers, Orders, OrderItems</div><div class="line"><span class="keyword">WHERE</span> Customers.cust_id = Orders.cust_id</div><div class="line">   <span class="keyword">AND</span> OrderItems.order_num = Orders.order_num</div><div class="line">   <span class="keyword">AND</span> prod_id = <span class="string">'RGAN01'</span>;</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>创建高级联结</strong></li>
+</ul>
+<p>迄今为止，我们使用的只是  <strong>内联结</strong> 或 <strong>等值联结</strong> 的简单联结。现在来看三种其他联结：<strong>自联结（self-join）</strong>、<strong>自然联结（natural join）</strong>和<strong>外联结（outer join）</strong>。</p>
+<blockquote>
+<p>sqlite3 定义了三种主要类型的连接：</p>
+<ul>
+<li>交叉连接 - CROSS JOIN （笛卡尔积 x*y）</li>
+<li>内连接 - INNER JOIN    (默认是内连接,  inner 可以省略, 左右表都满足条件才显示)</li>
+<li>外连接 - OUTER JOIN (sqlite3只支持 Left连接， 用右表来匹配左表，即每一行先从左表拿一条数据，再去右表找，右表没有找到，右表的项显示空，但是左表还是会显示) </li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>自联结（self-join）</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 子查询写法</span></div><div class="line"><span class="keyword">SELECT</span> cust_id, cust_name, cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers</div><div class="line"><span class="keyword">WHERE</span> cust_name = (<span class="keyword">SELECT</span> cust_name</div><div class="line">                   <span class="keyword">FROM</span> Customers</div><div class="line">                   <span class="keyword">WHERE</span> cust_contact = <span class="string">'Jim Jones'</span>);</div><div class="line"><span class="comment">-- 自联结（self-join）</span></div><div class="line"><span class="keyword">SELECT</span> c1.cust_id, c1.cust_name, c1.cust_contact</div><div class="line"><span class="keyword">FROM</span> Customers <span class="keyword">AS</span> c1, Customers <span class="keyword">AS</span> c2</div><div class="line"><span class="keyword">WHERE</span> c1.cust_name = c2.cust_name</div><div class="line">     <span class="keyword">AND</span> c2.cust_contact = <span class="string">'Jim Jones'</span>;</div><div class="line"><span class="comment">--此查询中需要的两个表实际上是相同的表，为了解决Customers的引用歧义性，使用表别名。Customers第一次出现用了别名C1，第二次出现用了别名C2。</span></div></pre></td></tr></table></figure>
+<p><em>需要注意，表别名只在查询执行中使用。与列别名不一样，表别名不返回到客户端。</em></p>
+<ul>
+<li><strong>自然联结（natural join）</strong></li>
+</ul>
+<p>无论何时对表进行联结，应该至少有一列不止出现在一个表中（被联结的列）。标准的联结（内联结）返回所有数据，相同的列甚至多次出现。自然联结排除多次出现，使每一列只返回一次。</p>
+<p>自然联结要求你只能选择那些唯一的列，一般通过对一个表使用通配符（SELECT *），而对其他表的列使用明确的子集来完成。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> C.*, O.order_num, O.order_date,</div><div class="line">       OI.prod_id, OI.quantity, OI.item_price</div><div class="line"><span class="keyword">FROM</span> Customers <span class="keyword">AS</span> C, Orders <span class="keyword">AS</span> O, OrderItems <span class="keyword">AS</span> OI</div><div class="line"><span class="keyword">WHERE</span> C.cust_id = O.cust_id</div><div class="line">     <span class="keyword">AND</span> OI.order_num = O.order_num</div><div class="line">     <span class="keyword">AND</span> prod_id = <span class="string">'RGAN01'</span>;</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>外联结（outer join）</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> table1 [<span class="keyword">left</span> | <span class="keyword">right</span> | <span class="keyword">full</span>] <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> table2 <span class="keyword">ON</span> conditional</div></pre></td></tr></table></figure>
+<p><em>全外联结（full outer join），它检索两个表中的所有行并关联那些可以关联的行。与左外联结或右外联结包含一个表的不关联的行不同，全外联结包含两个表的不关联的行。</em></p>
+<h1 id="组合查询"><a href="#组合查询" class="headerlink" title="组合查询"></a>组合查询</h1><p>SQL允许执行多个查询（多条SELECT语句），并将结果作为一个查询结果集返回。这些组合查询通常称为<strong>并（union）</strong> 或 <strong>复合查询（compound query）</strong>。</p>
+<ul>
+<li>主要有两种情况需要使用组合查询：<ul>
+<li>在一个查询中从不同的表返回结构数据；</li>
+<li>对一个表执行多个查询，按一个查询返回数据。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [] <span class="keyword">FROM</span> tablename1 <span class="keyword">WHERE</span> conditional1</div><div class="line"><span class="keyword">UNION</span> </div><div class="line"><span class="keyword">SELECT</span> [] <span class="keyword">FROM</span> tablename2 <span class="keyword">WHERE</span> conditional2</div></pre></td></tr></table></figure>
+<p><strong>UNION使用的规则</strong></p>
+<ul>
+<li>UNION必须由两条或两条以上的SELECT语句组成，语句之间用关键字UNION分隔（因此，如果组合四条SELECT语句，将要使用三个UNION关键字）。</li>
+<li>UNION中的每个查询必须包含相同的列、表达式或聚集函数（不过，各个列不需要以相同的次序列出）。</li>
+<li>列数据类型必须兼容：类型不必完全相同，但必须是DBMS可以隐含转换的类型（例如，不同的数值类型或不同的日期类型）。</li>
+</ul>
+<p><strong><em>其他说明</em></strong></p>
+<ul>
+<li><em>UNION从查询结果集中自动去除了重复的行；如果想返回所有的匹配行，可使用UNION ALL而不是UNION。</em></li>
+<li><em>在用UNION组合查询时，只能使用一条ORDER BY子句，它必须位于最后一条SELECT语句之后。</em></li>
+<li><em>其他类型的UNION，某些DBMS还支持另外两种UNION：EXCEPT（有时称为MINUS）可用来检索只在第一个表中存在而在第二个表中不存在的行；而INTERSECT可用来检索两个表中都存在的行。</em></li>
+</ul>
+<p>——————————<br>博客地址：<a href="http://liuzhiqiang.tech" target="_blank" rel="external">liuzhiqiang.tech</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/2017/03/09/sql_must_know_will_be_3th/" class="prev">PREV</a><a href="/2017/03/01/sql_must_know_will_be_1st/" class="next">NEXT</a></div><div class="copyright"><p>© 2017 <a href="http://yoursite.com">faramitaliu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-90572674-1",'auto');ga('send','pageview');</script></body></html>

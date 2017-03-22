@@ -1,0 +1,271 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> SQL必知必会(上)-查询、计算与分组 · faramitaliu博客</title><meta name="description" content="SQL必知必会(上)-查询、计算与分组 - faramitaliu"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="http://yoursite.com/atom.xml" title="faramitaliu博客"></head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/faramitaliu" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/faramitaliu" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="mailto:694076505@qq.com" target="_self" class="nav-list-link">MAIL</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">SQL必知必会(上)-查询、计算与分组</h1><div class="post-info">2017年3月1日</div><div class="post-content"><blockquote>
+<p>最近这段时间做了一个公司的项目，用到 SQLite3 数据库来存储数据，虽然数据并发要求不高，但存储数据量活动量有几十万（动态增删）。而且要保证机器全年正常运行。项目的有些部分数据操作实现是在应用程序部分实现，但是用 SQL 来内部实现的话效率会更高同时代码也更简洁。所以趁最近空闲一些来读下《SQL 必知必会》来补充一下欠缺。</p>
+</blockquote>
+<p><em>SQL（发音为字母S-Q-L或sequel）是结构化查询语言（Structured Query Language）的缩写</em></p>
+<h1 id="主键（primary-key）"><a href="#主键（primary-key）" class="headerlink" title="主键（primary key）"></a>主键（primary key）</h1><p><strong>主键的作用</strong>：便于数据库的操作和管理，没有主键，更新或删除特定行就会比较困难。</p>
+<a id="more"></a>
+<p>表中的任何列都可以作为主键，只要它满足以下条件：</p>
+<ul>
+<li>任意两行都不具有相同的主键值；</li>
+<li>每一行都必须具有一个主键值（主键列不允许NULL值）；</li>
+<li>主键列中的值不允许修改或更新；</li>
+<li>主键值不能重用（如果某行从表中删除，它的主键不能赋给以后的新行）。</li>
+</ul>
+<blockquote>
+<p>当多个列作为主键时，上述条件必须应用到所有列，所有列值的组合必须是唯一的（但单个列的值可以不唯一）。</p>
+</blockquote>
+<h1 id="SELECT语句"><a href="#SELECT语句" class="headerlink" title="SELECT语句"></a>SELECT语句</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [<span class="keyword">DISTINCT</span>] [column1,column2,...] [*]  <span class="keyword">FROM</span> <span class="keyword">table</span> </div><div class="line"><span class="keyword">WHERE</span> [关系逻辑条件] [通配符搜索 <span class="keyword">LIKE</span>] [限制 <span class="keyword">LIMIT</span>] [子查询] [排序 <span class="keyword">ORDER</span> <span class="keyword">BY</span>] ...</div></pre></td></tr></table></figure>
+<ul>
+<li><p>不是必须的情况下，尽量少使用通配符；检索不需要的列通常会降低检索和程序性能。</p>
+</li>
+<li><p>DISTINCT去除字段值相同的列<strong>SELECT DISTINCT column FROM …</strong></p>
+</li>
+<li><p>指定从哪儿开始以及检索的行数：<strong>LIMIT num OFFSET offset_row</strong> 从 offset_row行开始检索num行（第一个被检索的行是第0行）。简化版写法：<strong>LIMIT  offset_row,num</strong> （不同数据库写法有区别，此写法可用于SQLite3）</p>
+</li>
+<li><p>在指定一条<strong>ORDER BY</strong>子句时，应该保证它是SELECT语句中<strong>最后一条子句</strong>。如果它不是最后的子句，将会出现错误消息。DESC降序，DESC关键字只应用到直接位于其前面的列名，如果想在多个列上进行降序排序，必须对每一列指定DESC关键字。升序排列（默认）ASC。</p>
+</li>
+<li><p>组合WHERE子句：</p>
+<ul>
+<li>逻辑操作符AND，OR（其中AND的优先级大于OR）；</li>
+<li>IN操作符用来指定条件范围，范围中的每个条件都可以进行匹配（类似于OR）。IN取一组由逗号分隔、括在圆括号中的合法值；</li>
+<li>NOT操作符（组合其他操作符使用，否定条件）。</li>
+</ul>
+</li>
+<li><p>通配符（wildcard）：通配符搜索只能用于文本字段（串），非文本数据类型字段不能使用通配符搜索。</p>
+<ul>
+<li>%表示任何字符出现任意次数（0个、1个或多个，不匹配NULL）；</li>
+<li>下划线（_），匹配单个字符。</li>
+<li>方括号（[]）通配符用来指定一个字符集，它必须匹配指定位置（通配符的位置）的一个字符。<em>只有微软的Access和SQL Server支持集合。</em></li>
+<li>说明：通配符搜索耗时，应减少使用。同时应尽量不要把它们用在搜索模式的开始处。</li>
+</ul>
+</li>
+<li><p>注释：</p>
+<ul>
+<li>使用– （两个连字符）嵌在行内，– 之后的文本就是注释；</li>
+<li>多行注释： /* 注释内容 */ ；</li>
+<li>单行注释： #注释内容（<em>SQLite3不支持这种注释方式</em>）。</li>
+</ul>
+</li>
+<li><p><em>WHERE子句操作符</em>（不是所有DBMS都适用）</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>说 明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>=</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt; &gt;</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>不等于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>!</td>
+<td>不小于</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>!&gt;</td>
+<td>不大于</td>
+</tr>
+<tr>
+<td>BETWEEN … AND …</td>
+<td>在指定的两个值之间</td>
+</tr>
+<tr>
+<td>IS NULL</td>
+<td>为NULL值</td>
+</tr>
+</tbody>
+</table>
+<h1 id="计算字段"><a href="#计算字段" class="headerlink" title="计算字段"></a>计算字段</h1><p><strong>拼接字段</strong>：将值联结到一起（将一个值附加到另一个值）构成单个值。Access和SQL Server使用+号。DB2、Oracle、PostgreSQL、SQLite和Open Office Base使用 || 。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> vend_name + <span class="string">' ('</span> + vend_country + <span class="string">')'</span> <span class="keyword">FROM</span> Vendors <span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</div></pre></td></tr></table></figure>
+<p><em>若某个字段有空白字符，可以使用函数去除：前导空白 (LTrim)、尾随空白 (RTrim) 或前导和尾随空白 (Trim)。</em></p>
+<p>对于拼接字段后新列的名字，可以使用别名（alias），用AS关键字赋予。别名还有其他用途。常见的用途包括在实际的表列名包含不合法的字符（如空格）时重新命名它，在原来的名字含混或容易误解时扩充它。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(vend_name) + <span class="string">'('</span> + <span class="keyword">RTRIM</span>(vend_country) + <span class="string">')'</span> <span class="keyword">AS</span> vend_title <span class="keyword">FROM</span> Vendors <span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</div></pre></td></tr></table></figure>
+<p><strong>算术计算</strong></p>
+<p>直接计算使用方式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">id</span>,<span class="keyword">No</span>,<span class="keyword">id</span>*<span class="keyword">No</span> <span class="keyword">AS</span> new_name <span class="keyword">FROM</span> tablename <span class="keyword">WHERE</span> ...</div></pre></td></tr></table></figure>
+<p><strong>SQL算术操作符</strong></p>
+<table>
+<thead>
+<tr>
+<th>操 作 符</th>
+<th>说　　明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+</td>
+<td>加</td>
+</tr>
+<tr>
+<td>-</td>
+<td>减</td>
+</tr>
+<tr>
+<td>*</td>
+<td>乘</td>
+</tr>
+<tr>
+<td>/</td>
+<td>除</td>
+</tr>
+</tbody>
+</table>
+<p>数值处理函数，字符串处理函数，时间日期处理函数 …</p>
+<p><strong>SQL聚集函数</strong>：（aggregate function） 对某些行运行的函数，计算并返回一个值。</p>
+<table>
+<thead>
+<tr>
+<th>函　　数</th>
+<th>说　　明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVG()</td>
+<td>返回某列的平均值</td>
+</tr>
+<tr>
+<td>COUNT()</td>
+<td>返回某列的行数</td>
+</tr>
+<tr>
+<td>MAX()</td>
+<td>返回某列的最大值</td>
+</tr>
+<tr>
+<td>MIN()</td>
+<td>返回某列的最小值</td>
+</tr>
+<tr>
+<td>SUM()</td>
+<td>返回某列值之和</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ul>
+<li>AVG()函数只能作用于单个列，且计算式忽略列值为NULL的行。</li>
+<li>COUNT()函数有两种使用方式：<ul>
+<li>使用COUNT(*)对表中行的数目进行计数，不管表列中包含的是空值（NULL）还是非空值。</li>
+<li>使用COUNT(column)对特定列中具有值的行进行计数，忽略NULL值。</li>
+</ul>
+</li>
+<li>SUM()、MAX()和MIN()函数同样忽略列值为NULL的行。</li>
+<li>以上5个聚合函数均可如下使用：<ul>
+<li>对所有行执行计算，指定ALL参数或不指定参数（因为ALL是默认行为）。</li>
+<li>只包含不同的值，指定DISTINCT参数。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h1 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h1><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> [<span class="keyword">column</span>,聚合] <span class="keyword">FROM</span> <span class="keyword">Table</span></div><div class="line"><span class="keyword">WHERE</span> ... <span class="keyword">GROUP</span> <span class="keyword">BY</span> (分组<span class="keyword">column</span>) <span class="keyword">HAVING</span> ... <span class="keyword">ORDER</span> <span class="keyword">BY</span> ...</div></pre></td></tr></table></figure>
+<p><strong>GROUP BY 的一些规定：</strong></p>
+<ul>
+<li>GROUP BY子句可以包含任意数目的列，因而可以对分组进行嵌套，更细致地进行数据分组。</li>
+<li>如果在GROUP BY子句中嵌套了分组，数据将在最后指定的分组上进行汇总。换句话说，在建立分组时，指定的所有列都一起计算（所以不能从个别的列取回数据）。</li>
+<li>GROUP BY子句中列出的每一列都必须是检索列或有效的表达式（但不能是聚集函数）。如果在SELECT中使用表达式，则必须在GROUP BY子句中指定相同的表达式。不能使用别名。</li>
+<li>大多数SQL实现不允许GROUP BY列带有长度可变的数据类型（如文本或备注型字段）。</li>
+<li>除聚集计算语句外，SELECT语句中的每一列都必须在GROUP BY子句中给出。</li>
+<li>如果分组列中包含具有NULL值的行，则NULL将作为一个分组返回。如果列中有多行NULL值，它们将分为一组。</li>
+<li>GROUP BY子句必须出现在WHERE子句之后，ORDER BY子句之前。</li>
+</ul>
+<p><strong>过滤分组：</strong></p>
+<p>HAVING支持所有WHERE操作符。</p>
+<blockquote>
+<p>HAVING 和 WHERE 的差别：<br>WHERE在数据分组前进行过滤，HAVING在数据分组后进行过滤。这是一个重要的区别，WHERE排除的行不包括在分组中。<br>使用HAVING时应该结合GROUP BY子句，而WHERE子句用于标准的行级过滤。</p>
+</blockquote>
+<p><strong>分组和排序</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">ORDER BY</th>
+<th style="text-align:left">GROUP BY</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">对产生的输出排序</td>
+<td style="text-align:left">对行分组，但输出可能不是分组的顺序</td>
+</tr>
+<tr>
+<td style="text-align:left">任意列都可以使用（甚至非选择的列也可以使用）</td>
+<td style="text-align:left">只可能使用选择列或表达式列，而且必须使用每个选择列表达式</td>
+</tr>
+<tr>
+<td style="text-align:left">不一定需要</td>
+<td style="text-align:left">如果与聚集函数一起使用列（或表达式），则必须使用</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SELECT子句顺序</strong></p>
+<table>
+<thead>
+<tr>
+<th>子　　句</th>
+<th>说　　明</th>
+<th>是否必须使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT</td>
+<td>要返回的列或表达式</td>
+<td>是</td>
+</tr>
+<tr>
+<td>FROM</td>
+<td>从中检索数据的表</td>
+<td>仅在从表选择数据时使用</td>
+</tr>
+<tr>
+<td>WHERE</td>
+<td>行级过滤</td>
+<td>否</td>
+</tr>
+<tr>
+<td>GROUP BY</td>
+<td>分组说明</td>
+<td>仅在按组计算聚集时使用</td>
+</tr>
+<tr>
+<td>HAVING</td>
+<td>组级过滤</td>
+<td>否</td>
+</tr>
+<tr>
+<td>ORDER BY</td>
+<td>输出排序顺序</td>
+<td>否</td>
+</tr>
+</tbody>
+</table>
+<p>-———————–<br><a href="https://faramitaliu.github.io/" target="_blank" rel="external">博客地址</a> : <a href="http://liuzhiqiang.tech" target="_blank" rel="external">liuzhiqiang.tech</a></p>
+</div></article></div></main><footer><div class="paginator"><a href="/2017/03/02/sql_must_know_will_be_2nd/" class="prev">PREV</a><a href="/2017/02/28/repair_sqlite3_db/" class="next">NEXT</a></div><div class="copyright"><p>© 2017 <a href="http://yoursite.com">faramitaliu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;e=o.createElement(i);r=o.getElementsByTagName(i)[0];e.src='//www.google-analytics.com/analytics.js';r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));ga('create',"UA-90572674-1",'auto');ga('send','pageview');</script></body></html>
